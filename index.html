@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang='en'>
+<head>
+<meta charset='UTF-8'>
+<meta name='viewport' content='width=device-width, initial-scale=1.0'>
+<title>HappyChild Dashboard</title>
+<style>
+body { font-family: Arial, sans-serif; padding: 20px; background: #f5f5f5; }
+h1 { color: #333; }
+.container { margin-bottom: 30px; background: #fff; padding: 20px; border-radius: 10px; box-shadow: 0 0 10px rgba(0,0,0,0.1); }
+button { padding: 10px 15px; margin-top: 10px; cursor: pointer; }
+.alerts { background: #ffe6e6; padding: 10px; border-radius: 5px; max-height: 150px; overflow-y: auto; }
+.result { margin-top: 10px; padding: 10px; background: #e6f7ff; border-radius: 5px; }
+</style>
+</head>
+<body>
+<h1>HappyChild Dashboard</h1>
+<div class='container'>
+<h2>Text Analysis</h2>
+<textarea id='textInput' rows='3' cols='50' placeholder='Enter suspicious text...'></textarea><br>
+<button onclick='sendText()'>Analyze Text</button>
+<div id='textResult' class='result'></div>
+</div>
+<div class='container'>
+<h2>Image Analysis</h2>
+<input type='file' id='imageInput' accept='image/*'><br>
+<button onclick='sendImage()'>Analyze Image</button>
+<div id='imageResult' class='result'></div>
+</div>
+<div class='container'>
+<h2>Audio Analysis</h2>
+<input type='file' id='audioInput' accept='audio/*'><br>
+<button onclick='sendAudio()'>Analyze Audio</button>
+<div id='audioResult' class='result'></div>
+</div>
+<div class='container'>
+<h2>Live Alerts</h2>
+<div id='alerts' class='alerts'></div>
+</div>
+<script>
+// SSE for alerts
+const evtSource = new EventSource('/alerts/stream');
+evtSource.onmessage = function(event) {
+    const alertsDiv = document.getElementById('alerts');
+    alertsDiv.innerHTML += '<div>' + event.data + '</div>';
+    alertsDiv.scrollTop = alertsDiv.scrollHeight;
+};
+// Text analysis
+function sendText() {
+    const content = document.getElementById('textInput').value;
+    fetch('/analyze/text/', {
+        method: 'POST',
+        headers: {'Content-Type':'application/json'},
+        body: JSON.stringify({content})
+    }).then(res => res.json())
+      .then(data => { document.getElementById('textResult').innerText = JSON.stringify(data); });
+}
+// Image analysis
+function sendImage() {
+    const file = document.getElementById('imageInput').files[0];
+    if (!file) return alert('Select an image!');
+    const formData = new FormData();
+    formData.append('file', file);
+    fetch('/analyze/image/', { method:'POST', body: formData })
+        .then(res => res.json())
+        .then(data => { document.getElementById('imageResult').innerText = JSON.stringify(data); });
+}
+// Audio analysis
+function sendAudio() {
+    const file = document.getElementById('audioInput').files[0];
+    if (!file) return alert('Select an audio!');
+    const formData = new FormData();
+    formData.append('file', file);
+    fetch('/analyze/audio/', { method:'POST', body: formData })
+        .then(res => res.json())
+        .then(data => { document.getElementById('audioResult').innerText = JSON.stringify(data); });
+}
+</script>
+</body>
+</html>

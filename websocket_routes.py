@@ -1,0 +1,1 @@
+from fastapi import APIRouter, WebSocket\n\nrouter = APIRouter()\n\n@router.websocket('/')\nasync def alerts_endpoint(websocket: WebSocket):\n    await websocket.accept()\n    await websocket.send_text('Connected to HappyChild Alerts!')\n    while True:\n        data = await websocket.receive_text()\n        await websocket.send_text(f'Alert received: {data}')
