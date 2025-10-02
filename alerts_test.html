@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>HappyChild Alerts</title>
+</head>
+<body>
+    <h2>Live Alerts</h2>
+    <div id="alerts"></div>
+    <script>
+        // Connect to the SSE endpoint
+        const evtSource = new EventSource("http://127.0.0.1:8000/alerts/");
+        evtSource.onmessage = function(event) {
+            const alertsDiv = document.getElementById("alerts");
+            const newAlert = document.createElement("p");
+            newAlert.textContent = event.data;
+            alertsDiv.appendChild(newAlert);
+        };
+        evtSource.onerror = function(err) {
+            console.error("SSE error:", err);
+            evtSource.close();
+        };
+    </script>
+</body>
+</html>
