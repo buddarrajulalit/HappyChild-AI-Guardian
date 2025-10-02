@@ -1,3 +1,20 @@
+<<<<<<< HEAD
+fastapi
+uvicorn[standard]
+transformers
+torch
+torchvision
+torchaudio
+sentencepiece
+openai-whisper
+vosk
+pillow
+requests
+websockets
+python-multipart
+pymongo
+firebase-admin
+=======
 annotated-types==0.7.0
 anyio==4.5.2
 CacheControl==0.14.2
@@ -86,3 +103,4 @@ vosk==0.3.45
 watchfiles==0.24.0
 websockets==13.1
 zipp==3.20.2
+>>>>>>> 32fca09c8497922d576e4ba37eef8bbdd9c9ed46
